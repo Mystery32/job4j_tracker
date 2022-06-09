@@ -13,7 +13,7 @@ public class ItemSortTest {
 
     @Test
     public void whenSortByAsc() {
-        List<Item> items = Arrays.asList(new Item("Zulfia"),new Item("Pahlava"), new Item("Chihlova"));
+        List<Item> items = Arrays.asList(new Item("Zulfia"), new Item("Pahlava"), new Item("Chihlova"));
         Collections.sort(items, new ItemAscByName());
         List<Item> expected = Arrays.asList(new Item("Chihlova"), new Item("Pahlava"), new Item("Zulfia"));
         assertThat(expected, is(items));
@@ -21,7 +21,7 @@ public class ItemSortTest {
 
     @Test
     public void whenSortByDesc() {
-        List<Item> items = Arrays.asList(new Item("Abubarak"),new Item("Mudak"), new Item("Bardak"));
+        List<Item> items = Arrays.asList(new Item("Abubarak"), new Item("Mudak"), new Item("Bardak"));
         Collections.sort(items, new ItemDescByName());
         List<Item> expected = Arrays.asList(new Item("Mudak"), new Item("Bardak"), new Item("Abubarak"));
         assertThat(expected, is(items));
