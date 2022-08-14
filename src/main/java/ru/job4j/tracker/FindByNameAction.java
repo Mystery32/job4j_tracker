@@ -25,7 +25,7 @@ public class FindByNameAction implements UserAction {
                 out.println(item);
             }
         } else {
-            out.println("Р—Р°СЏРІРєРё СЃ РёРјРµРЅРµРј: " + name + " РЅРµ РЅР°Р№РґРµРЅС‹.");
+            out.println("Заявки с именем: " + name + " не найдены.");
         }
         return true;
     }

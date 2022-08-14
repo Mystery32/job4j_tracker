@@ -24,7 +24,7 @@ public class FindAllAction implements UserAction {
                 out.println(item);
             }
         } else {
-            out.println("РҐСЂР°РЅРёР»РёС‰Рµ РµС‰С‘ РЅРµ СЃРѕРґРµСЂР¶РёС‚ Р·Р°СЏРІРѕРє");
+            out.println("Хранилище ещё не содержит заявок");
         }
         return true;
     }
