@@ -33,7 +33,7 @@ public class SqlTracker implements Store, AutoCloseable {
     }
 
     @Override
-    public Item add(Item item) throws SQLException {
+    public Item add(Item item) {
         try (PreparedStatement ps = cn.prepareStatement("insert into items(name, created) values (?, ?);",
                 Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, item.getName());
@@ -44,6 +44,8 @@ public class SqlTracker implements Store, AutoCloseable {
                     item.setId(generatedKeys.getInt(1));
                 }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return item;
     }
@@ -81,10 +83,7 @@ public class SqlTracker implements Store, AutoCloseable {
         try (PreparedStatement ps = cn.prepareStatement("select * from items")) {
             try (ResultSet resultSet = ps.executeQuery()) {
                 while (resultSet.next()) {
-                    items.add(new Item(
-                            resultSet.getInt("id"),
-                            resultSet.getString("name")
-                    ));
+                    items.add(resultItem(resultSet));
                 }
             }
         } catch (Exception e) {
@@ -100,10 +99,7 @@ public class SqlTracker implements Store, AutoCloseable {
             ps.setString(1, key);
             try (ResultSet resultSet = ps.executeQuery()) {
                 while (resultSet.next()) {
-                    items.add(new Item(
-                            resultSet.getInt("id"),
-                            resultSet.getString("name")
-                    ));
+                    items.add(resultItem(resultSet));
                 }
             }
         } catch (Exception e) {
@@ -118,13 +114,20 @@ public class SqlTracker implements Store, AutoCloseable {
         try (PreparedStatement ps = cn.prepareStatement("select * from items where id = ?")) {
             ps.setInt(1, id);
             try (ResultSet resultSet = ps.executeQuery()) {
-                while (resultSet.next()) {
-                    item = new Item(resultSet.getInt("id"), resultSet.getString("name"));
+                if (resultSet.next()) {
+                    item = resultItem(resultSet);
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return item;
+    }
+
+    public Item resultItem(ResultSet resultSet) throws SQLException {
+        Item item = new Item(resultSet.getInt("id"),
+                resultSet.getString("name"));
+        item.setCreated(resultSet.getTimestamp("created").toLocalDateTime());
         return item;
     }
 }
