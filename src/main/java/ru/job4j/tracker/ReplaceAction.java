@@ -1,10 +1,10 @@
 package ru.job4j.tracker;
 
-public class EditAction implements UserAction {
+public class ReplaceAction implements UserAction {
 
     private final Output out;
 
-    public EditAction(Output out) {
+    public ReplaceAction(Output out) {
         this.out = out;
     }
 
@@ -14,15 +14,15 @@ public class EditAction implements UserAction {
     }
 
     @Override
-    public boolean execute(Input input, Tracker tracker) {
+    public boolean execute(Input input, Store tracker) {
         out.println("=== Edit item ===");
         int id = input.askInt("Enter id: ");
         String name = input.askStr("Enter name: ");
         Item item = new Item(name);
         if (tracker.replace(id, item)) {
-            out.println("Заявка изменена успешно.");
+            out.println("Р—Р°СЏРІРєР° РёР·РјРµРЅРµРЅР° СѓСЃРїРµС€РЅРѕ.");
         } else {
-            out.println("Ошибка замены заявки.");
+            out.println("РћС€РёР±РєР° Р·Р°РјРµРЅС‹ Р·Р°СЏРІРєРё.");
         }
         return true;
     }

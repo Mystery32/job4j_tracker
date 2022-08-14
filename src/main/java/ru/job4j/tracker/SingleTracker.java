@@ -20,7 +20,7 @@ public class SingleTracker {
         return instance;
     }
 
-    private Tracker tracker = new Tracker();
+    private MemTracker tracker = new MemTracker();
 
     public Item add(Item item) {
         return tracker.add(item);

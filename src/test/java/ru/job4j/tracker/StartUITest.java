@@ -2,6 +2,7 @@ package ru.job4j.tracker;
 
 import org.junit.Test;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,10 +13,10 @@ import static org.junit.Assert.assertThat;
 public class StartUITest {
 
     @Test
-    public void whenCreateItem() {
+    public void whenCreateItem() throws SQLException {
         Output out = new StubOutput();
         Input in = new StubInput(new String[]{"0", "Item name", "1"});
-        Tracker tracker = new Tracker();
+        MemTracker tracker = new MemTracker();
         List<UserAction> actions = new ArrayList<>();
         actions.add(new CreateAction(out));
         actions.add(new ExitAction(out));
@@ -24,23 +25,23 @@ public class StartUITest {
     }
 
     @Test
-    public void whenReplaceItem() {
+    public void whenReplaceItem() throws SQLException {
         Output out = new StubOutput();
-        Tracker tracker = new Tracker();
+        MemTracker tracker = new MemTracker();
         Item item = tracker.add(new Item("Bug"));
         String newName = "Bug with description";
         Input in = new StubInput(new String[]{"0", String.valueOf(item.getId()), newName, "1"});
         List<UserAction> actions = new ArrayList<>();
-        actions.add(new EditAction(out));
+        actions.add(new ReplaceAction(out));
         actions.add(new ExitAction(out));
         new StartUI(out).init(in, tracker, actions);
         assertThat(tracker.findById(item.getId()).getName(), is(newName));
     }
 
     @Test
-    public void whenDeleteItem() {
+    public void whenDeleteItem() throws SQLException {
         Output out = new StubOutput();
-        Tracker tracker = new Tracker();
+        MemTracker tracker = new MemTracker();
         Item item = tracker.add(new Item());
         Input in = new StubInput(new String[]{"0", String.valueOf(item.getId()), "1"});
         List<UserAction> actions = new ArrayList<>();
@@ -51,12 +52,12 @@ public class StartUITest {
     }
 
     @Test
-    public void whenExit() {
+    public void whenExit() throws SQLException {
         Output out = new StubOutput();
         Input in = new StubInput(
                 new String[]{"0"}
         );
-        Tracker tracker = new Tracker();
+        MemTracker tracker = new MemTracker();
         List<UserAction> actions = new ArrayList<>();
         actions.add(new ExitAction(out));
         new StartUI(out).init(in, tracker, actions);
@@ -67,16 +68,16 @@ public class StartUITest {
     }
 
     @Test
-    public void whenReplaceItemTestOutputIsSuccessfully() {
+    public void whenReplaceItemTestOutputIsSuccessfully() throws SQLException {
         Output out = new StubOutput();
-        Tracker tracker = new Tracker();
+        MemTracker tracker = new MemTracker();
         Item one = tracker.add(new Item("test1"));
         String replaceName = "New Test Name";
         Input in = new StubInput(
                 new String[]{"0", String.valueOf(one.getId()), replaceName, "1"}
         );
         List<UserAction> actions = new ArrayList<>();
-        actions.add(new EditAction(out));
+        actions.add(new ReplaceAction(out));
         actions.add(new ExitAction(out));
         new StartUI(out).init(in, tracker, actions);
         String ln = System.lineSeparator();
@@ -93,9 +94,9 @@ public class StartUITest {
     }
 
     @Test
-    public void whenReplaceItemTestOutputIsNotSuccessfully() {
+    public void whenReplaceItemTestOutputIsNotSuccessfully() throws SQLException {
         Output out = new StubOutput();
-        Tracker tracker = new Tracker();
+        MemTracker tracker = new MemTracker();
         Item one = tracker.add(new Item("test1"));
         String replaceName = "New Test Name";
         String wrongId = "2";
@@ -103,7 +104,7 @@ public class StartUITest {
                 new String[]{"0", wrongId, replaceName, "1"}
         );
         List<UserAction> actions = new ArrayList<>();
-        actions.add(new EditAction(out));
+        actions.add(new ReplaceAction(out));
         actions.add(new ExitAction(out));
         new StartUI(out).init(in, tracker, actions);
         String ln = System.lineSeparator();
@@ -120,16 +121,16 @@ public class StartUITest {
     }
 
     @Test
-    public void whenFindAllTestOutputIsSuccessfully() {
+    public void whenFindAllTestOutputIsSuccessfully() throws SQLException {
         Output out = new StubOutput();
-        Tracker tracker = new Tracker();
+        MemTracker tracker = new MemTracker();
         Item one = tracker.add(new Item("First"));
         Item two = tracker.add(new Item("Second"));
         Input in = new StubInput(
                 new String[] {"0", "1"}
         );
         List<UserAction> actions = new ArrayList<>();
-        actions.add(new ShowAllAction(out));
+        actions.add(new FindAllAction(out));
         actions.add(new ExitAction(out));
         new StartUI(out).init(in, tracker, actions);
         String ln = System.lineSeparator();
@@ -147,14 +148,14 @@ public class StartUITest {
     }
 
     @Test
-    public void whenFindAllTestOutputIsNotSuccessfully() {
+    public void whenFindAllTestOutputIsNotSuccessfully() throws SQLException {
         Output out = new StubOutput();
-        Tracker tracker = new Tracker();
+        MemTracker tracker = new MemTracker();
         Input in = new StubInput(
                 new String[] {"0", "1"}
         );
         List<UserAction> actions = new ArrayList<>();
-        actions.add(new ShowAllAction(out));
+        actions.add(new FindAllAction(out));
         actions.add(new ExitAction(out));
         new StartUI(out).init(in, tracker, actions);
         String ln = System.lineSeparator();
@@ -171,9 +172,9 @@ public class StartUITest {
     }
 
     @Test
-    public void whenFindByNameTestOutputIsAllVariants() {
+    public void whenFindByNameTestOutputIsAllVariants() throws SQLException {
         Output out = new StubOutput();
-        Tracker tracker = new Tracker();
+        MemTracker tracker = new MemTracker();
         Item one = tracker.add(new Item("Test Name"));
         String findName = "Test Name";
         String wrongName = "Test";
@@ -203,9 +204,9 @@ public class StartUITest {
     }
 
     @Test
-    public void whenFindByIdTestOutputIsAllVariants() {
+    public void whenFindByIdTestOutputIsAllVariants() throws SQLException {
         Output out = new StubOutput();
-        Tracker tracker = new Tracker();
+        MemTracker tracker = new MemTracker();
         Item one = tracker.add(new Item());
         String wrongId = "2";
         Input in = new StubInput(
@@ -234,12 +235,12 @@ public class StartUITest {
     }
 
     @Test
-    public void whenInvalidExit() {
+    public void whenInvalidExit() throws SQLException {
         Output out = new StubOutput();
         Input in = new StubInput(
                 new String[] {"1", "0"}
         );
-        Tracker tracker = new Tracker();
+        MemTracker tracker = new MemTracker();
         List<UserAction> actions = new ArrayList<>();
         actions.add(new ExitAction(out));
         new StartUI(out).init(in, tracker, actions);
