@@ -21,7 +21,7 @@ public class CreateAction implements UserAction {
         String name = input.askStr("Enter name: ");
         Item item = new Item(name);
         tracker.add(item);
-        out.println("Р”РѕР±Р°РІР»РµРЅРЅР°СЏ Р·Р°СЏРІРєР°: " + item);
+        out.println("Добавленная заявка: " + item);
         return true;
     }
 }
