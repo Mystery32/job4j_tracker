@@ -32,24 +32,22 @@ public class StartUI {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         Output output = new ConsoleOutput();
         Input input = new ValidateInput(output, new ConsoleInput());
-        try (SqlTracker tracker = new SqlTracker()) {
-            tracker.init();
-            List<UserAction> actions = List.of(
+        MemTracker tracker = new MemTracker();
+        List<UserAction> actions = List.of(
                     new CreateAction(output),
+                    new CreateManyAction(output),
                     new ReplaceAction(output),
                     new DeleteAction(output),
+                    new DeleteAllAction(output),
                     new FindAllAction(output),
                     new FindByIdAction(output),
                     new FindByNameAction(output),
-                    new ExitAction(output)
-            );
-            new StartUI(output).init(input, tracker, actions);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                    new ExitAction(output));
+
+        new StartUI(output).init(input, tracker, actions);
     }
 }
 
